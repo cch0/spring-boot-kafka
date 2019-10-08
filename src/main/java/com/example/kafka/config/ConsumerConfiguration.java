@@ -5,10 +5,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@ConfigurationProperties(prefix = "kafka.topic")
+@ConfigurationProperties(prefix = "kafka.consumer")
 @Data
-public class TopicConfiguration {
-    String name;
-    int numberOfPartitions;
-    int numberOfReplicas;
+public class ConsumerConfiguration {
+    private String groupIdPrefix;
 }

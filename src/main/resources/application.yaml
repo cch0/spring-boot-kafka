@@ -1,13 +1,10 @@
 kafka:
   cluster:
-    bootstrapServer: 192.168.99.100:9092
-  topic:
-    name: abc
-    numberOfPartitions: 1
-    numberOfReplicas: 1
-
+    bootstrapServer: 192.168.1.54:9092
+  consumer:
+    groupIdPrefix: group-
 
 logging:
   level:
     root: INFO
-    org.apache.kafka.clients: DEBUG
+    org.apache.kafka.clients: INFO

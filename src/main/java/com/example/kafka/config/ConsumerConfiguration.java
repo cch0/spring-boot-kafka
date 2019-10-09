@@ -9,4 +9,5 @@ import org.springframework.context.annotation.Configuration;
 @Data
 public class ConsumerConfiguration {
     private String groupIdPrefix;
+    private int maxFailure;
 }

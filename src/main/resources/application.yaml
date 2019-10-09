@@ -3,8 +3,17 @@ kafka:
     bootstrapServer: 192.168.1.54:9092
   consumer:
     groupIdPrefix: group-
+    maxFailure: 2
+
 
 logging:
   level:
     root: INFO
-    org.apache.kafka.clients: INFO
+    org:
+      apache:
+        kafka:
+          clients:
+            producer:
+              ProducerConfig: WARN
+
+

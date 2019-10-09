@@ -10,12 +10,18 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Slf4j
-public class CustomMessageConsumerService {
-    @KafkaListener(topics = { "custom" }, containerFactory = "kafkaListenerContainerFactoryForCustom")
+public class ErrorHandlingConsumerService {
+
+    @KafkaListener(topics = { "custom" }, containerFactory = "kafkaListenerContainerFactory")
     public void listenWithHeaders(@Payload CustomMessage message,
                                   @Header(KafkaHeaders.RECEIVED_PARTITION_ID) int partition,
                                   @Header(KafkaHeaders.OFFSET) int offset) {
 
         log.info("message received, partition={}, offset={}, message={}", partition, offset, message);
+    }
+
+    @KafkaListener(topics = "custom.DLT")
+    public void dltListen(final CustomMessage message) {
+        log.info("Received from DeadLetterTopic: " + message);
     }
 }

@@ -14,26 +14,30 @@ import org.springframework.util.concurrent.ListenableFutureCallback;
 @Slf4j
 public class CustomMessageProducerService {
     @Autowired
-    @Qualifier(value = "kafkaTemplateForPOJO")
-    private KafkaTemplate kafkaTemplate;
+    @Qualifier(value = "kafkaTemplate")
+    private KafkaTemplate<Object, Object> kafkaTemplate;
 
     public void postMessage(final CustomMessage message) {
-        ListenableFuture<SendResult<String, CustomMessage>> listenableFuture =
+
+        this.kafkaTemplate.executeInTransaction(kafkaTemplate -> {
+            ListenableFuture<SendResult<Object, Object>> listenableFuture =
                 kafkaTemplate.send("custom", null, message);
 
-        listenableFuture.addCallback(new ListenableFutureCallback<SendResult<String, CustomMessage>>() {
+            listenableFuture.addCallback(new ListenableFutureCallback<SendResult<Object, Object>>() {
 
-            @Override
-            public void onSuccess(SendResult<String, CustomMessage> result) {
-                log.info("message sent, partition={}, offset={}", result.getRecordMetadata().partition(),
+                @Override
+                public void onSuccess(SendResult<Object, Object> result) {
+                    log.info("message sent, partition={}, offset={}", result.getRecordMetadata().partition(),
                         result.getRecordMetadata().offset());
-            }
+                }
 
-            @Override
-            public void onFailure(Throwable throwable) {
-                log.warn("failed to send, message={}", message, throwable);
-            }
+                @Override
+                public void onFailure(Throwable throwable) {
+                    log.warn("failed to send, message={}", message, throwable);
+                }
+            });
+
+            return null;
         });
-
     }
 }

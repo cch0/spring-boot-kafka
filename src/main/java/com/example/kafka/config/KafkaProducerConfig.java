@@ -1,6 +1,5 @@
 package com.example.kafka.config;
 
-import com.example.kafka.model.CustomMessage;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,17 +32,23 @@ public class KafkaProducerConfig {
         return new KafkaTemplate<>(producerFactoryForString());
     }
 
-    @Bean(name = "producerFactoryForPOJO")
-    public ProducerFactory<String, CustomMessage> producerFactoryForPOJO() {
+    @Bean(name = "producerFactory")
+    public ProducerFactory<Object, Object> producerFactory() {
         Map<String, Object> configProps = new HashMap<>();
         configProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, clusterConfiguration.getBootstrapServer());
         configProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         configProps.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
-        return new DefaultKafkaProducerFactory<>(configProps);
+
+        DefaultKafkaProducerFactory factory = new DefaultKafkaProducerFactory<>(configProps);
+
+        // enable transaction
+        factory.setTransactionIdPrefix("tx-");
+
+        return factory;
     }
 
-    @Bean(name = "kafkaTemplateForPOJO")
-    public KafkaTemplate<String, CustomMessage> kafkaTemplateForPOJO() {
-        return new KafkaTemplate<>(producerFactoryForPOJO());
+    @Bean(name = "kafkaTemplate")
+    public KafkaTemplate<Object, Object> kafkaTemplate() {
+        return new KafkaTemplate<>(producerFactory());
     }
 }

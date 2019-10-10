@@ -19,7 +19,7 @@ import java.util.Random;
  */
 @EnableKafka
 @Configuration
-public class KafkaConsumerConfig {
+public class KafkaSimpleConsumerConfig {
     private static Random random = new Random(System.currentTimeMillis());
 
     @Autowired

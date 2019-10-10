@@ -33,7 +33,7 @@ import java.util.Random;
 @EnableKafka
 @Configuration
 @Slf4j
-public class KafkaErrorHandlingConsumerConfig {
+public class KafkaCustomMessageConsumerConfig {
     private static Random random = new Random(System.currentTimeMillis());
 
     @Autowired

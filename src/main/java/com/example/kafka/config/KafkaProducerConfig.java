@@ -13,6 +13,9 @@ import org.springframework.kafka.support.serializer.JsonSerializer;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * ProducerFactory and KafkaTemplate configuration for both "simple" and "custom" cases.
+ */
 @Configuration
 public class KafkaProducerConfig {
     @Autowired

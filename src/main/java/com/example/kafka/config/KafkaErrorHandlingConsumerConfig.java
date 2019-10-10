@@ -26,6 +26,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
+/**
+ * ConsumerFactory and ListenerContainerFactory configuration for "custom" topic case which expects message value can
+ * be converted into POJO.
+ */
 @EnableKafka
 @Configuration
 @Slf4j
@@ -42,7 +46,11 @@ public class KafkaErrorHandlingConsumerConfig {
     public ConsumerFactory<Object, Object> consumerFactory() {
         Map<String, Object> props = new HashMap<>();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, clusterConfiguration.getBootstrapServer());
+
+        // for illustration purpose, using a random group id
         props.put(ConsumerConfig.GROUP_ID_CONFIG, consumerConfiguration.getGroupIdPrefix() + random.nextInt());
+
+        // set the isolation level
         props.put(ConsumerConfig.ISOLATION_LEVEL_CONFIG, "read_committed");
 
         return new DefaultKafkaConsumerFactory<>(props, new StringDeserializer(),
@@ -61,8 +69,11 @@ public class KafkaErrorHandlingConsumerConfig {
         configurer.configure(factory, consumerFactory);
 
         factory.setConsumerFactory(consumerFactory);
+
+        // error handling
         factory.setErrorHandler(new SeekToCurrentErrorHandler(new DeadLetterPublishingRecoverer(template),
             consumerConfiguration.getMaxFailure()));
+
         return factory;
     }
 
@@ -71,9 +82,13 @@ public class KafkaErrorHandlingConsumerConfig {
         StringJsonMessageConverter converter = new StringJsonMessageConverter();
         DefaultJackson2JavaTypeMapper typeMapper = new DefaultJackson2JavaTypeMapper();
         typeMapper.setTypePrecedence(Jackson2JavaTypeMapper.TypePrecedence.TYPE_ID);
+        // set the trusted package
         typeMapper.addTrustedPackages("com.example.kafka.model");
+
         Map<String, Class<?>> mappings = new HashMap<>();
-        mappings.put("hmmmm", CustomMessage.class);
+        // "register" POJO class
+        mappings.put("custom", CustomMessage.class);
+
         typeMapper.setIdClassMapping(mappings);
         converter.setTypeMapper(typeMapper);
         return converter;

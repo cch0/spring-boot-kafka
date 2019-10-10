@@ -1,6 +1,6 @@
 kafka:
   cluster:
-    bootstrapServer: 192.168.1.54:9092
+    bootstrapServer: 192.168.1.196:9092
   consumer:
     groupIdPrefix: group-
     maxFailure: 2

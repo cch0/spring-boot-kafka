@@ -10,6 +10,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.util.concurrent.ListenableFutureCallback;
 
+/**
+ * Producer to sending message to "custom" topic.
+ */
 @Component
 @Slf4j
 public class CustomMessageProducerService {
@@ -18,8 +21,9 @@ public class CustomMessageProducerService {
     private KafkaTemplate<Object, Object> kafkaTemplate;
 
     public void postMessage(final CustomMessage message) {
-
+        // wrapping the send method in a transaction
         this.kafkaTemplate.executeInTransaction(kafkaTemplate -> {
+            // actually send the message
             ListenableFuture<SendResult<Object, Object>> listenableFuture =
                 kafkaTemplate.send("custom", null, message);
 

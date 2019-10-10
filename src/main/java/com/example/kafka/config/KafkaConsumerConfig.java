@@ -14,6 +14,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
+/**
+ * ConsumerFactory and ListenerContainerFactory configuration for "simple" topic case which expects message to be a plain string
+ */
 @EnableKafka
 @Configuration
 public class KafkaConsumerConfig {
@@ -42,21 +45,4 @@ public class KafkaConsumerConfig {
         factory.setConsumerFactory(consumerFactoryForString());
         return factory;
     }
-
-//    @Bean(name = "consumerFactoryForCustomMessage")
-//    public ConsumerFactory<String, CustomMessage> consumerFactoryForCustomMessage() {
-//        Map<String, Object> props = new HashMap<>();
-//        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, clusterConfiguration.getBootstrapServer());
-//        props.put(ConsumerConfig.GROUP_ID_CONFIG, consumerConfiguration.getGroupIdPrefix() + random.nextInt());
-//        return new DefaultKafkaConsumerFactory<>(props, new StringDeserializer(),
-//            new JsonDeserializer<>(CustomMessage.class));
-//    }
-//
-//    @Bean(name = "kafkaListenerContainerFactoryForCustom")
-//    public ConcurrentKafkaListenerContainerFactory<String, CustomMessage> kafkaListenerContainerFactoryForCustom() {
-//        ConcurrentKafkaListenerContainerFactory<String, CustomMessage> factory =
-//            new ConcurrentKafkaListenerContainerFactory<>();
-//        factory.setConsumerFactory(consumerFactoryForCustomMessage());
-//        return factory;
-//    }
 }

@@ -7,6 +7,9 @@ import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
 
+/**
+ * Consumer for receiving message from "simple" topic which expects message to be plain string.
+ */
 @Component
 @Slf4j
 public class SimpleConsumerService {

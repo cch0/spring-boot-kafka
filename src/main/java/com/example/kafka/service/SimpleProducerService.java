@@ -9,6 +9,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.util.concurrent.ListenableFutureCallback;
 
+/**
+ * Producer to sending message to "simple" topic.
+ */
 @Component
 @Slf4j
 public class SimpleProducerService {
@@ -17,6 +20,7 @@ public class SimpleProducerService {
     private KafkaTemplate kafkaTemplate;
 
     public void postMessage(final String message) {
+        // compared to the other producer, no transaction is setup for sending the message
         ListenableFuture<SendResult<String, String>> listenableFuture =
                 kafkaTemplate.send("simple", null, message);
 
